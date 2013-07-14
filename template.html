@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width" />
+<title>Model-Kartei Stream</title>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+<style type="text/css">
+	html,body { background-color:white; }
+	* {font-family: 'Open Sans Condensed', sans-serif; }
+	img {
+		width:100%;
+		-webkit-box-shadow: 0px 0px 17px #9e9e9e;
+		-moz-box-shadow: 0px 0px 17px #9e9e9e;
+		box-shadow: 0px 0px 17px #9e9e9e;
+	}
+	p {
+		padding:0 0 0 0;
+		margin:-0.4em 0 0.2em 0;
+		font-size:80%;
+	}
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="application/javascript">
+/**
+ * jQuery Unveil
+ * A very lightweight jQuery plugin to lazy load images
+ * http://luis-almeida.github.com/unveil
+ *
+ * Licensed under the MIT license.
+ * Copyright 2013 Luís Almeida
+ * https://github.com/luis-almeida
+ */
+
+;(function($){$.fn.unveil=function(threshold){var $w=$(window),th=threshold||0,retina=window.devicePixelRatio>1,attrib=retina?"data-src-retina":"data-src",images=this,loaded,inview,source;this.one("unveil",function(){source=this.getAttribute(attrib);source=source||this.getAttribute("data-src");if(source)this.setAttribute("src",source);});function unveil(){inview=images.filter(function(){var $e=$(this),wt=$w.scrollTop(),wb=wt+$w.height(),et=$e.offset().top,eb=et+$e.height();return eb>=wt-th&&et<=wb+th;});loaded=inview.trigger("unveil");images=images.not(loaded);}$w.scroll(unveil);$w.resize(unveil);unveil();return this;};})(window.jQuery||window.Zepto);
+
+$(document).ready(function() {
+  $("img").unveil();
+});
+</script>
+</head>
+<body>
+<h1>MK-Stream</h1>
+{{#favouriteImages}}
+<a href="https://www.model-kartei.de/bilder/bild/{{imageNumber}}"><img src="/?thumbUrl={{thumbUrl}}" data-src="/?imageNumber={{imageNumber}}" /></a><p>{{userName}}</p>
+{{/favouriteImages}}
+<h2>Powered by netAction</h2>
+</body>
+</html>
