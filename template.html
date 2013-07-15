@@ -1,39 +1,40 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
+<!-- MK-Wall 2013 by Thomas netAction Schmidt -->
+<!-- License: Do the fuck you want! -->
+<!-- Page: http://mk-stream.netaction.de/ -->
+<!-- Sources: https://github.com/netAction/mk-stream -->
+
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width" />
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
 <title>Model-Kartei Stream</title>
 <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
 <style type="text/css">
 	html,body { background-color:white; }
 	* {font-family: 'Open Sans Condensed', sans-serif; }
+	h1,h2 {
+		margin:0.3em 2% 0.3em 2%;
+		font-weight:normal;
+	}
 	img {
-		width:100%;
-		-webkit-box-shadow: 0px 0px 17px #9e9e9e;
-		-moz-box-shadow: 0px 0px 17px #9e9e9e;
-		box-shadow: 0px 0px 17px #9e9e9e;
+		margin:0 2% 0 2%;
+		width:96%;
+		-webkit-box-shadow: 0px 0px 10px #9e9e9e;
+		-moz-box-shadow: 0px 0px 10px #9e9e9e;
+		box-shadow: 0px 0px 10px #9e9e9e;
 	}
 	p {
 		padding:0 0 0 0;
-		margin:-0.4em 0 0.2em 0;
+		margin:-0.4em 2% 0.2em 2%;
 		font-size:80%;
 	}
 </style>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+<script src="browser_modules/jquery.unveil.min.js"></script>
 <script type="application/javascript">
-/**
- * jQuery Unveil
- * A very lightweight jQuery plugin to lazy load images
- * http://luis-almeida.github.com/unveil
- *
- * Licensed under the MIT license.
- * Copyright 2013 Luís Almeida
- * https://github.com/luis-almeida
- */
-
-;(function($){$.fn.unveil=function(threshold){var $w=$(window),th=threshold||0,retina=window.devicePixelRatio>1,attrib=retina?"data-src-retina":"data-src",images=this,loaded,inview,source;this.one("unveil",function(){source=this.getAttribute(attrib);source=source||this.getAttribute("data-src");if(source)this.setAttribute("src",source);});function unveil(){inview=images.filter(function(){var $e=$(this),wt=$w.scrollTop(),wb=wt+$w.height(),et=$e.offset().top,eb=et+$e.height();return eb>=wt-th&&et<=wb+th;});loaded=inview.trigger("unveil");images=images.not(loaded);}$w.scroll(unveil);$w.resize(unveil);unveil();return this;};})(window.jQuery||window.Zepto);
-
 $(document).ready(function() {
   $("img").unveil();
 });
