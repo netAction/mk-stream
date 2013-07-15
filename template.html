@@ -41,10 +41,20 @@ $(document).ready(function() {
 </script>
 </head>
 <body>
-<h1>MK-Stream</h1>
+<div data-role="page">
+<div data-role="content">	
+
+
 {{#favouriteImages}}
-<a href="https://www.model-kartei.de/bilder/bild/{{imageNumber}}"><img src="/?thumbUrl={{thumbUrl}}" data-src="/?imageNumber={{imageNumber}}" /></a><p>{{userName}}</p>
+<a href="https://www.model-kartei.de/bilder/bild/{{&imageNumber}}"><img src="/?thumbUrl={{&thumbUrl}}" data-src="/?imageNumber={{imageNumber}}" /></a><p>{{&userName}}</p>
 {{/favouriteImages}}
+
+{{#jobs}}
+ <div data-role="collapsible" data-inset="false"><h3><a href="https://www.model-kartei.de/jobs/{{&jobNumber}}-0-x.html">{{&jobTitle}}</a></h3>
+<div><a href="{{&userSedcard}}">{{&userName}}</a></div></div>
+{{/jobs}}
+
 <h2>Powered by netAction</h2>
+</div></div><!-- page, content -->
 </body>
 </html>
