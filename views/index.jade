@@ -1,0 +1,15 @@
+extends layout
+
+block vars
+	- var title = "Favoritenbilder"
+
+block scripts
+	script(src='/javascripts/index.js')
+
+block content
+	#favouriteImages
+		each favouriteImage in favouriteImages
+			a(href='https://www.model-kartei.de/bilder/bild/'+favouriteImage.imageNumber)
+				img(src='/image?url='+favouriteImage.thumbUrl,imagenumber=favouriteImage.imageNumber)
+			p !{favouriteImage.userName}
+
