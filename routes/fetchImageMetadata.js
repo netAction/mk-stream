@@ -2,8 +2,6 @@ var
 	request = require('request'),
 	url = require('url'),
 	login = require('./login');
-//	fs = require('fs'),
-//	async = require('async');
 
 
 module.exports = function(req, res){
@@ -34,9 +32,13 @@ module.exports = function(req, res){
 				imageMetadata.url = imageUrl;
 
 				var likeCount = body.split('Personen die dieses Bild gro&szlig;artig finden">');
-				likeCount = likeCount[1].split('</a>');
-				likeCount = likeCount[0];
-				imageMetadata.likeCount = likeCount;
+				if (likeCount.length>1) {
+					likeCount = likeCount[1].split('</a>');
+					likeCount = likeCount[0];
+					imageMetadata.likeCount = likeCount;
+				} else {
+					likeCount = false;
+				}
 
 				var iLikeThis = body.split('title="Klicke hier wenn dir das Bild nicht mehr gef&auml;llt">Doch nicht so toll</a>');
 				imageMetadata.iLikeThis = (iLikeThis.length>1);

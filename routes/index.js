@@ -2,8 +2,8 @@ var
 	request = require('request'),
 	login = require('./login'),
 	fs = require('fs'),
-	async = require('async');
-
+	async = require('async'),
+	fetchGlobalInfos = require('./fetchGlobalInfos');
 
 
 function getFavourites(logindata,pageUrl,callback) {
@@ -20,10 +20,11 @@ function getFavourites(logindata,pageUrl,callback) {
 		},
 		function (error, response, body) {
 			if (error || response.statusCode != 200) callback(1,{});
-			body = body.split('https://www.model-kartei.de/bilder/bild/');
-			body.splice(0,1); // remove first element
-			var images = [];
-			body.forEach(function(image){
+			var images = body.split('https://www.model-kartei.de/bilder/bild/');
+			images.splice(0,1); // remove first element
+			var view = fetchGlobalInfos(body);
+			view.favouriteImages = [];
+			images.forEach(function(image){
 				image = image.split('src="');
 				var imageNumber = image[0].split('/"');
 				imageNumber = imageNumber[0];
@@ -32,9 +33,9 @@ function getFavourites(logindata,pageUrl,callback) {
 				image = image[1].split('</a>');
 				image = image[1].split('>');
 				userName = image[image.length-1];
-				images.push({imageNumber:imageNumber,thumbUrl:thumbUrl,userName:userName});
+				view.favouriteImages.push({imageNumber:imageNumber,thumbUrl:thumbUrl,userName:userName});
 			});
-			callback(0,{favouriteImages:images});
+			callback(0,view);
 	});
 } // getFavourites
 
@@ -51,6 +52,8 @@ function displaySite(res,data) {
 		if (a.imageNumber < b.imageNumber) return 1;
 		return 0;
 	});
+	view.sedcards = data[0].sedcards;
+	view.newMessage = data[0].newMessage;
 
 	res.render('index',view);
 } // displaySite

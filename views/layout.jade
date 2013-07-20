@@ -13,11 +13,14 @@ html(lang="en")
 		link(href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300',rel='stylesheet',type='text/css')
 		script(src='http://code.jquery.com/jquery-1.9.1.min.js')
 		script(src='http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js')
+		script(src='/javascripts/unveil.js')
 	body
 		div(data-role='page',data-theme='c',data-content-theme='c')
 			div(data-role='header',data-theme='c')
 				block vars
 				h1 MK-Stream
+				if newMessage
+					a.ui-btn-right(href='https://www.model-kartei.de/pn.html') Nachricht ✉
 				div(data-role='navbar')
 					ul
 						each menuitem in [{title:'Favoritenbilder',url:'/'},{title:'Jobs',url:'/jobs'}]
@@ -27,6 +30,14 @@ html(lang="en")
 							else
 								li
 									a(href=menuitem.url) #{menuitem.title}
+						each menuitem in sedcards
+							if (menuitem.title == title)
+								li
+									a(class='ui-btn-active ui-state-persist',href='/sedcard?urlpart='+menuitem.url) #{menuitem.title}
+							else
+								li
+									a(href='/sedcard?urlpart='+menuitem.url) #{menuitem.title}
+
 			div(data-role='content')
 				block content
 			div(data-role='footer',data-theme='c')

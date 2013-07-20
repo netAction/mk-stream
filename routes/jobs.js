@@ -2,7 +2,8 @@ var
 	request = require('request'),
 	login = require('./login'),
 	fs = require('fs'),
-	async = require('async');
+	async = require('async'),
+	fetchGlobalInfos = require('./fetchGlobalInfos');
 
 
 function getJobs(logindata,pageUrl,callback) {
@@ -17,10 +18,11 @@ function getJobs(logindata,pageUrl,callback) {
 			jar: j
 		},
 		function (error, response, body) {
-			body = body.split('class="bg');
-			body.splice(0,1); // remove first element
-			var jobs = [];
-			body.forEach(function(job){
+			var jobs = body.split('class="bg');
+			jobs.splice(0,1); // remove first element
+			var view = fetchGlobalInfos(body);
+			view.jobs = [];
+			jobs.forEach(function(job){
 				var jobNumber = job.split('href="https://www.model-kartei.de/jobs/');
 				jobNumber = jobNumber[1].split('-0-');
 				jobNumber = jobNumber[0];
@@ -41,7 +43,7 @@ function getJobs(logindata,pageUrl,callback) {
 				var payUser = job.split('Pay (User will bezahlt werden)');
 				payUser = (payUser.length>1);
 
-				jobs.push({
+				view.jobs.push({
 					jobNumber: jobNumber,
 					jobTitle: jobTitle,
 					userSedcard: userSedcard,
@@ -49,7 +51,7 @@ function getJobs(logindata,pageUrl,callback) {
 					payUser: payUser
 				});
 			});
-			callback(0,{jobs:jobs});
+			callback(0,view);
 	});
 } // getJobs
 
@@ -80,6 +82,9 @@ function displaySite(res,data) {
 		if (a.jobNumber < b.jobNumber) return 1;
 		return 0;
 	});
+
+	view.sedcards = data[0].sedcards;
+	view.newMessage = data[0].newMessage;
 
 	res.render('jobs',view);
 } // displaySite

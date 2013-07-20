@@ -1,0 +1,16 @@
+extends layout
+
+block vars
+	- var title = sedcardType
+
+block content
+	script(src='/javascripts/sedcard.js')
+	#sedcard
+		h1 !{userName}
+		div !{descriptionText}
+		each image in images
+			div
+				a(href='https://www.model-kartei.de/bilder/bild/'+image.imageNumber)
+					img(src='/image?url='+image.thumbUrl,imagenumber=image.imageNumber)
+				p.likeInfo
+				p !{userName}

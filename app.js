@@ -4,13 +4,14 @@
 // Sources: https://github.com/netAction/mk-stream
 
 var express = require('express')
-  , index = require('./routes')
-  , image = require('./routes/image')
-  , jobs = require('./routes/jobs')
-  , jobData = require('./routes/jobData')
-  , fetchImageMetadata = require('./routes/fetchImageMetadata')
-  , http = require('http')
-  , path = require('path');
+	, index = require('./routes')
+	, image = require('./routes/image')
+	, jobs = require('./routes/jobs')
+	, jobData = require('./routes/jobData')
+	, sedcard = require('./routes/sedcard')
+	, fetchImageMetadata = require('./routes/fetchImageMetadata')
+	, http = require('http')
+	, path = require('path');
 
 var app = express();
 
@@ -27,7 +28,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
 if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
+	app.use(express.errorHandler());
+	app.locals.pretty = true;
 }
 
 app.get('/', index);
@@ -35,8 +37,9 @@ app.get('/image', image);
 app.get('/jobs', jobs);
 app.get('/fetchImageMetadata', fetchImageMetadata);
 app.get('/jobData', jobData);
+app.get('/sedcard', sedcard);
 
 
 http.createServer(app).listen(app.get('port'), function(){
-  console.log('MK-Stream server listening on port ' + app.get('port'));
+	console.log('MK-Stream server listening on port ' + app.get('port'));
 });
