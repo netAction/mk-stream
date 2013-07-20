@@ -24,8 +24,15 @@ module.exports = function(body){
 		});
 	}
 
-	var newMessage = body.split('<li><a class="ttiptop" id="pnlnk" href="https://www.model-kartei.de/pn.html" title="Private Nachrichten"></a></li>');
-	view.newMessage = (newMessage.length==1);
+	var newMessage = body.split('<a class="ttiptop" id="pnlnk" href="https://www.model-kartei.de/pn.html" title="Private Nachrichten"><p>');
+	if (newMessage.length<2) {
+		newMessage = false;
+	} else {
+		newMessage = newMessage[1].split('</p></a>');
+		newMessage = newMessage[0];
+		newMessage = newMessage*1;
+	}
+	view.newMessage = newMessage;
 
 	return view;
 }

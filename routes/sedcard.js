@@ -70,6 +70,8 @@ module.exports = function(req, res){
 				}
 				view.sedcardType = sedcardType;
 
+				view.sedcardUrl = queryData.urlpart;
+
 				res.render('sedcard',view);
 			} catch (e) {
 					res.writeHead(404, {'Content-Type': 'text/plain'});

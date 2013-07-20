@@ -7,10 +7,11 @@ block content
 	script(src='/javascripts/sedcard.js')
 	#sedcard
 		h1 !{userName}
+		a(href="https://www.model-kartei.de/sedcards/"+sedcardUrl) Sedcard auf Model-Kartei.de
 		div !{descriptionText}
 		each image in images
 			div
 				a(href='https://www.model-kartei.de/bilder/bild/'+image.imageNumber)
 					img(src='/image?url='+image.thumbUrl,imagenumber=image.imageNumber)
-				p.likeInfo
+				p.likeinfo
 				p !{userName}

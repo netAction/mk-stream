@@ -33,7 +33,7 @@ function getJobs(logindata,pageUrl,callback) {
 
 				var userSedcard = job.split('https://www.model-kartei.de/sedcards');
 				userSedcard = userSedcard[1].split('/" ');
-				userSedcard = 'https://www.model-kartei.de/sedcards'+userSedcard[0];
+				userSedcard = userSedcard[0];
 
 				var userName = job.split('https://www.model-kartei.de/sedcards');
 				userName = userName[1].split('title="');

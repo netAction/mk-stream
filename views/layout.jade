@@ -20,7 +20,7 @@ html(lang="en")
 				block vars
 				h1 MK-Stream
 				if newMessage
-					a.ui-btn-right(href='https://www.model-kartei.de/pn.html') Nachricht ✉
+					a.ui-btn-right(href='https://www.model-kartei.de/pn.html') Nachricht ✉ !{newMessage}
 				div(data-role='navbar')
 					ul
 						each menuitem in [{title:'Favoritenbilder',url:'/'},{title:'Jobs',url:'/jobs'}]
