@@ -2,21 +2,13 @@ var
 	request = require('request'),
 	url = require('url'),
 	login = require('./login');
-// fs = require('fs')
 
-module.exports = function(req, res){
-	var logindata = login(req,res);
-	if (!logindata) return;
 
-	var j = request.jar();
-	j.add(request.cookie('mk4_userid='+logindata.userid));
-	j.add(request.cookie('mk4_userpw='+logindata.userpw));
-
-	var queryData = url.parse(req.url,true).query;
+function fetch(jobNumber,j,res) {
 	request(
 		{
 			method:'GET',
-			url:'https://www.model-kartei.de/jobs/'+queryData.jobNumber+'-0-x.html',
+			url:'https://www.model-kartei.de/jobs/'+jobNumber+'-0-x.html',
 			jar: j
 		},
 		function (error, response, body) {
@@ -33,7 +25,6 @@ module.exports = function(req, res){
 					jobImage = false;
 				}
 
-
 				var jobData = {
 					jobText:jobText,
 					jobImage:jobImage
@@ -49,4 +40,39 @@ module.exports = function(req, res){
 			} 
 		}
 	);
+} // fetch
+
+function ignore(jobNumber,j,res) {
+	request(
+		{
+			method:'POST',
+			url:'https://www.model-kartei.de/js/p/job.php',
+			form:{jid:jobNumber,typus:'ajobignore'},
+			jar: j
+		},
+		function (error, response, body) {
+			res.writeHead(200, {'Content-Type': 'text/plain'});
+			res.write(JSON.stringify({ok:true}));
+			res.end();
+		}
+	);
+}
+
+
+module.exports = function(req, res){
+	var logindata = login(req,res);
+	if (!logindata) return;
+
+	var j = request.jar();
+	j.add(request.cookie('mk4_userid='+logindata.userid));
+	j.add(request.cookie('mk4_userpw='+logindata.userpw));
+
+	var queryData = url.parse(req.url,true).query;
+
+	if (queryData.ignore) {
+		ignore(queryData.jobNumber,j,res);
+	} else {
+		fetch(queryData.jobNumber,j,res);
+	}
+
 };

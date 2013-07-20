@@ -27,11 +27,19 @@ module.exports = function(req, res){
 		function(error, response, body) {
 			try {
 				imageMetadata = {};
-				imageUrl = body.split('id="bild"');
+				var imageUrl = body.split('id="bild"');
 				imageUrl = imageUrl[1].split('src="');
 				imageUrl = imageUrl[1].split('"');
 				imageUrl = imageUrl[0];
 				imageMetadata.url = imageUrl;
+
+				var likeCount = body.split('Personen die dieses Bild gro&szlig;artig finden">');
+				likeCount = likeCount[1].split('</a>');
+				likeCount = likeCount[0];
+				imageMetadata.likeCount = likeCount;
+
+				var iLikeThis = body.split('title="Klicke hier wenn dir das Bild nicht mehr gef&auml;llt">Doch nicht so toll</a>');
+				imageMetadata.iLikeThis = (iLikeThis.length>1);
 
 				res.writeHead(200, {'Content-Type': 'text/plain'});
 				res.write(JSON.stringify(imageMetadata));

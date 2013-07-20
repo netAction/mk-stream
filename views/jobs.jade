@@ -3,19 +3,21 @@ extends layout
 block vars
 	- var title = "Jobs"
 
-block scripts
-	script(src='/javascripts/jobs.js')
 
 block content
+	script(src='/javascripts/jobs.js')
 	each job in jobs
 		div.jobCollapsible(data-role='collapsible',data-inset="false",data-jobnumber=job.jobNumber)
-			h3 !{job.jobTitle} 
+			h3
+				if job.payUser
+					| € 
+				| !{job.jobTitle} 
 				span.thin - !{job.userName}
 			p.jobDescription Lade...
 			p
 				small
-					a(href='https://www.model-kartei.de/jobs/'+job.jobNumber+'-0-x.html') Diesen Job 
-					| von 
+					a(href='https://www.model-kartei.de/jobs/'+job.jobNumber+'-0-x.html') Diesen Job
+					|  von 
 					a(href=job.userSedcard) !{job.userName}
-					| in Zukunft 
-					a.ignore(href='/jobs') ignorieren
+					|  in Zukunft 
+					a.ignore(href='/jobs',data-jobnumber=job.jobNumber) ignorieren

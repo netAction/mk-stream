@@ -19,6 +19,7 @@ function getFavourites(logindata,pageUrl,callback) {
 			jar: j
 		},
 		function (error, response, body) {
+			if (error || response.statusCode != 200) callback(1,{});
 			body = body.split('https://www.model-kartei.de/bilder/bild/');
 			body.splice(0,1); // remove first element
 			var images = [];

@@ -38,11 +38,15 @@ function getJobs(logindata,pageUrl,callback) {
 				userName = userName[1].split('">');
 				userName = userName[0];
 
+				var payUser = job.split('Pay (User will bezahlt werden)');
+				payUser = (payUser.length>1);
+
 				jobs.push({
 					jobNumber: jobNumber,
 					jobTitle: jobTitle,
 					userSedcard: userSedcard,
-					userName: userName
+					userName: userName,
+					payUser: payUser
 				});
 			});
 			callback(0,{jobs:jobs});
@@ -54,13 +58,23 @@ function displaySite(res,data) {
 		jobs:[]
 	};
 
-	var jobs = [];
-	view.jobs = jobs.concat(
+	view.jobs = [].concat(
 		data[0].jobs,
 		data[1].jobs,
 		data[2].jobs,
 		data[3].jobs
 		);
+
+	// remove double elements
+	var arr = {};
+	for ( var i=0; i < view.jobs.length; i++ ) {
+		arr[view.jobs[i].jobNumber] = view.jobs[i];
+	}
+	view.jobs = [];
+	for ( key in arr )
+		view.jobs.push(arr[key]);
+
+	// sort array
 	view.jobs.sort(function(a,b){
 		if (a.jobNumber > b.jobNumber) return -1;
 		if (a.jobNumber < b.jobNumber) return 1;

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).one('pageinit',function() {
 	$('div.jobCollapsible').bind("expand", function(event, ui) {
 		var job = $(this);
 		var jobNumber = $(this).attr('data-jobnumber');
@@ -12,6 +12,8 @@ $(document).ready(function() {
 				$('a.ignore',job).click(function(event) {
 					$(job).slideUp('slow');
 					event.preventDefault();
+					var jobNumber = $(this).attr('data-jobnumber');
+					$.getJSON('/jobData', {jobNumber:jobNumber,ignore:true});
 				});
 		});
 	});
