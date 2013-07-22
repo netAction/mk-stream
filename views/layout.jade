@@ -33,10 +33,10 @@ html(lang="en")
 						each menuitem in sedcards
 							if (menuitem.title == title)
 								li
-									a(class='ui-btn-active ui-state-persist',href='/sedcard?urlpart='+menuitem.url) #{menuitem.title}
+									a(class='ui-btn-active ui-state-persist',href='/sedcards/'+menuitem.url) #{menuitem.title}
 							else
 								li
-									a(href='/sedcard?urlpart='+menuitem.url) #{menuitem.title}
+									a(href='/sedcards/'+menuitem.url) #{menuitem.title}
 
 			div(data-role='content')
 				block content

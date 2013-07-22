@@ -34,8 +34,16 @@
 						} else {
 							var likeInfo = '';
 						}
-						$(image).parent().parent().children('p.likeInfo')
+						$(image).parent().children('p.likeInfo')
 							.html(likeInfo);
+						$(image).parent().children('div.imageDescription')
+							.html('<p><a href="https://www.model-kartei.de/bilder/bild/'+imageNumber+'">Bild bei Model-Kartei.de</a></p>');
+						$(image).click(function() {
+							$(this).parent().children('div.imageDescription').slideToggle();
+							$(this).parent().children('p.userName').slideToggle();
+							$(this).parent().children('p.likeInfo').slideToggle();
+						});
+						$(image).css('cursor','pointer');
 					});
 			}
 		});

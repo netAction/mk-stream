@@ -31,7 +31,7 @@ function getJobs(logindata,pageUrl,callback) {
 				jobTitle = jobTitle[1].split('">');
 				jobTitle = jobTitle[0];
 
-				var userSedcard = job.split('https://www.model-kartei.de/sedcards');
+				var userSedcard = job.split('https://www.model-kartei.de/sedcards/');
 				userSedcard = userSedcard[1].split('/" ');
 				userSedcard = userSedcard[0];
 

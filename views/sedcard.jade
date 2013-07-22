@@ -5,13 +5,12 @@ block vars
 
 block content
 	script(src='/javascripts/sedcard.js')
-	#sedcard
-		h1 !{userName}
+	.sedcard
+		h2 !{userName}
 		a(href="https://www.model-kartei.de/sedcards/"+sedcardUrl) Sedcard auf Model-Kartei.de
-		div !{descriptionText}
+		div.descriptionText !{descriptionText}
 		each image in images
-			div
-				a(href='https://www.model-kartei.de/bilder/bild/'+image.imageNumber)
-					img(src='/image?url='+image.thumbUrl,imagenumber=image.imageNumber)
-				p.likeinfo
-				p !{userName}
+			- var imageNumber = image.imageNumber
+			- var thumbUrl = image.thumbUrl
+			include image
+

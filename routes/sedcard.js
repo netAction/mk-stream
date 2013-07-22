@@ -12,7 +12,8 @@ module.exports = function(req, res){
 	var logindata = login(req,res);
 	if (!logindata) return;
 
-	var queryData = url.parse(req.url,true).query;
+	var urlPart = url.parse(req.url,true).pathname;
+	urlPart = urlPart.substr(9);
 
 	// TODO: Get Private Message status
 	var j = request.jar();
@@ -22,7 +23,7 @@ module.exports = function(req, res){
 	request(
 		{
 			method:'GET',
-			url:'https://www.model-kartei.de/sedcards/'+queryData.urlpart,
+			url:'https://www.model-kartei.de/sedcards/'+urlPart,
 			jar: j
 		},
 		function (error, response, body) {
@@ -60,7 +61,7 @@ module.exports = function(req, res){
 				});
 
 
-				var sedcardType = queryData.urlpart.split('/');
+				var sedcardType = urlPart.split('/');
 				sedcardType = sedcardType[0];
 				switch (sedcardType) {
 					case 'fotograf': sedcardType = 'Fotograf'; break;
@@ -70,7 +71,7 @@ module.exports = function(req, res){
 				}
 				view.sedcardType = sedcardType;
 
-				view.sedcardUrl = queryData.urlpart;
+				view.sedcardUrl = urlPart;
 
 				res.render('sedcard',view);
 			} catch (e) {

@@ -32,7 +32,7 @@ function getFavourites(logindata,pageUrl,callback) {
 				var thumbUrl = image[0]+'.jpg';
 				image = image[1].split('</a>');
 				image = image[1].split('>');
-				userName = image[image.length-1];
+				var userName = image[image.length-1];
 				view.favouriteImages.push({imageNumber:imageNumber,thumbUrl:thumbUrl,userName:userName});
 			});
 			callback(0,view);

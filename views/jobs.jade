@@ -18,6 +18,6 @@ block content
 				small
 					a(href='https://www.model-kartei.de/jobs/'+job.jobNumber+'-0-x.html') Diesen Job
 					|  von 
-					a(href='/sedcard?urlpart='+job.userSedcard) !{job.userName}
+					a(href='/sedcards/'+job.userSedcard) !{job.userName}
 					|  in Zukunft 
 					a.ignore(href='/jobs',data-jobnumber=job.jobNumber) ignorieren

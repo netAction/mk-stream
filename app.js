@@ -37,7 +37,7 @@ app.get('/image', image);
 app.get('/jobs', jobs);
 app.get('/fetchImageMetadata', fetchImageMetadata);
 app.get('/jobData', jobData);
-app.get('/sedcard', sedcard);
+app.get(/^\/sedcards.*/, sedcard);
 
 
 http.createServer(app).listen(app.get('port'), function(){

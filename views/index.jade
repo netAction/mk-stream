@@ -6,9 +6,9 @@ block vars
 block content
 	script(src='/javascripts/index.js')
 	#favouriteImages
-		each favouriteImage in favouriteImages
-			div
-				a(href='https://www.model-kartei.de/bilder/bild/'+favouriteImage.imageNumber)
-					img(src='/image?url='+favouriteImage.thumbUrl,imagenumber=favouriteImage.imageNumber)
-				p.likeinfo
-				p.username !{favouriteImage.userName}
+		each image in favouriteImages
+			- var userName = image.userName
+			- var imageNumber = image.imageNumber
+			- var thumbUrl = image.thumbUrl
+			include image
+
