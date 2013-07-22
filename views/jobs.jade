@@ -7,17 +7,10 @@ block vars
 block content
 	script(src='/javascripts/jobs.js')
 	each job in jobs
-		div.jobCollapsible(data-role='collapsible',data-inset="false",data-jobnumber=job.jobNumber)
-			h3
-				if job.payUser
-					| € 
-				| !{job.jobTitle} 
-				span.thin - !{job.userName}
-			p.jobDescription Lade...
-			p
-				small
-					a(href='https://www.model-kartei.de/jobs/'+job.jobNumber+'-0-x.html') Diesen Job
-					|  von 
-					a(href='/sedcards/'+job.userSedcard) !{job.userName}
-					|  in Zukunft 
-					a.ignore(href='/jobs',data-jobnumber=job.jobNumber) ignorieren
+		- var jobNumber = job.jobNumber
+		- var payUser = job.payUser
+		- var jobTitle = job.jobTitle
+		- var jobUserName = job.userName
+		-	var userSedcard = job.userSedcard
+		include job
+

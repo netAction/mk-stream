@@ -1,3 +1,3 @@
 $(document).one('pagechange',function() {
-		$("#favouriteImages img").unveil();
+		$(".ui-content:visible #favouriteImages img").unveil();
 });

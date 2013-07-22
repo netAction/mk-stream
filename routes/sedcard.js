@@ -8,14 +8,9 @@ var
 
 
 
-module.exports = function(req, res){
-	var logindata = login(req,res);
-	if (!logindata) return;
 
-	var urlPart = url.parse(req.url,true).pathname;
-	urlPart = urlPart.substr(9);
 
-	// TODO: Get Private Message status
+function getSedcard(logindata,urlPart,callback) {
 	var j = request.jar();
 	j.add(request.cookie('mk4_userid='+logindata.userid));
 	j.add(request.cookie('mk4_userpw='+logindata.userpw));
@@ -73,12 +68,117 @@ module.exports = function(req, res){
 
 				view.sedcardUrl = urlPart;
 
-				res.render('sedcard',view);
+				callback(0,view);
 			} catch (e) {
-					res.writeHead(404, {'Content-Type': 'text/plain'});
-					res.write('404 Not Found: '+queryData.url+'\n');
-					res.end();
+				callback(1);
 			}
 	});
+} // getSedcard
+
+
+function getJobs(logindata,urlPart,callback) {
+	var j = request.jar();
+	j.add(request.cookie('mk4_userid='+logindata.userid));
+	j.add(request.cookie('mk4_userpw='+logindata.userpw));
+
+	urlPart = urlPart.split('/');
+	userId = 0;
+	for(var i=0;i<urlPart.length;i++) {
+		if (parseInt(urlPart[i],10)>userId) {
+			userId = parseInt(urlPart[i],10);
+		}
+	}
+
+	request(
+		{
+			method:'GET',
+			url:'https://www.model-kartei.de/jobs/user/'+userId+'/',
+			jar: j
+		},
+		function (error, response, body) {
+			try {
+				var view = {};
+				view.jobs = [];
+
+				var jobs = body.split('class="bg');
+				jobs.splice(0,1); // remove first element
+				var view = fetchGlobalInfos(body);
+				view.jobs = [];
+				jobs.forEach(function(job){
+					var jobNumber = job.split('href="https://www.model-kartei.de/jobs/');
+					jobNumber = jobNumber[1].split('-0-');
+					jobNumber = jobNumber[0];
+
+					var jobTitle = job.split('title="');
+					jobTitle = jobTitle[1].split('">');
+					jobTitle = jobTitle[0];
+
+					var userSedcard = job.split('https://www.model-kartei.de/sedcards/');
+					userSedcard = userSedcard[1].split('/" ');
+					userSedcard = userSedcard[0];
+
+					var userName = job.split('https://www.model-kartei.de/sedcards');
+					userName = userName[1].split('title="');
+					userName = userName[1].split('">');
+					userName = userName[0];
+
+					var payUser = job.split('Pay (User will bezahlt werden)');
+					payUser = (payUser.length>1);
+
+					view.jobs.push({
+						jobNumber: jobNumber,
+						jobTitle: jobTitle,
+						userSedcard: userSedcard,
+						userName: userName,
+						payUser: payUser
+					});
+				});
+				callback(0,view);
+
+			} catch (e) {
+				callback(1);
+			}
+	});
+} // getJobs
+
+function displaySite(error,res,data) {
+	if (error) {
+		res.writeHead(404, {'Content-Type': 'text/plain'});
+		res.write('404 Not Found: '+queryData.url+'\n');
+		res.end();
+	} else {
+		view=data[0];
+		view.jobs=data[1].jobs;
+		res.render('sedcard',view);
+	}
+} // displaySite
+
+
+module.exports = function(req, res){
+	var logindata = login(req,res);
+	if (!logindata) return;
+
+	var urlPart = url.parse(req.url,true).pathname;
+	urlPart = urlPart.substr(9);
+
+
+	async.series([
+		function(callback){ // Sedcard
+			getSedcard(logindata,urlPart,callback);
+		},
+		function(callback){ // Jobs
+			getJobs(logindata,urlPart,callback);
+		},
+
+		],
+		function(error,results){
+			displaySite(error,res,results);
+		}
+	);
+
+
+
+
+
 
 };

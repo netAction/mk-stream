@@ -9,8 +9,18 @@ block content
 		h2 !{userName}
 		a(href="https://www.model-kartei.de/sedcards/"+sedcardUrl) Sedcard auf Model-Kartei.de
 		div.descriptionText !{descriptionText}
-		each image in images
-			- var imageNumber = image.imageNumber
-			- var thumbUrl = image.thumbUrl
-			include image
+
+		each job in jobs
+			- var jobNumber = job.jobNumber
+			- var payUser = job.payUser
+			- var jobTitle = job.jobTitle
+			- var jobUserName = ''
+			include job
+
+		div.jobCollapsible(data-role='collapsible',data-inset="false",data-collapsed="false")
+			h3 Bilder
+			each image in images
+				- var imageNumber = image.imageNumber
+				- var thumbUrl = image.thumbUrl
+				include image
 

@@ -1,0 +1,21 @@
+div.jobCollapsible(data-role='collapsible',data-inset="false",data-jobnumber=jobNumber)
+	h3
+		if payUser
+			| € 
+		if(jobUserName=='')
+			| Job: 
+		| !{jobTitle} 
+		if jobUserName
+			span.thin - !{jobUserName}
+	p.jobDescription Lade...
+	p
+		small
+			if(jobUserName!='')
+				a(href='https://www.model-kartei.de/jobs/'+jobNumber+'-0-x.html') Diesen Job
+				|  von 
+				a(href='/sedcards/'+userSedcard) !{jobUserName}
+				|  in Zukunft 
+				a.ignore(href='/jobs',data-jobnumber=jobNumber) ignorieren
+			else
+				a(href='https://www.model-kartei.de/jobs/'+jobNumber+'-0-x.html') Dieser Job auf Model-Kartei.de
+
