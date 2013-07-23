@@ -69,8 +69,8 @@ function getSedcard(logindata,urlPart,callback) {
 				view.sedcardUrl = urlPart;
 
 				callback(0,view);
-			} catch (e) {
-				callback(1);
+			} catch (error) {
+				callback(1,error);
 			}
 	});
 } // getSedcard
@@ -135,21 +135,22 @@ function getJobs(logindata,urlPart,callback) {
 				});
 				callback(0,view);
 
-			} catch (e) {
-				callback(1);
+			} catch (error) {
+				callback(1,error);
 			}
 	});
 } // getJobs
 
 function displaySite(error,res,data) {
-	if (error) {
-		res.writeHead(404, {'Content-Type': 'text/plain'});
-		res.write('404 Not Found: '+queryData.url+'\n');
-		res.end();
-	} else {
+	if (!error) {
 		view=data[0];
 		view.jobs=data[1].jobs;
 		res.render('sedcard',view);
+	} else {
+		res.writeHead(404, {'Content-Type': 'text/plain'});
+		res.write('404 Not Found.  Error in sedcard.js\n');
+		res.end();
+		console.log(data);
 	}
 } // displaySite
 

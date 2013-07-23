@@ -18,6 +18,7 @@ function getJobs(logindata,pageUrl,callback) {
 			jar: j
 		},
 		function (error, response, body) {
+			try {
 			var jobs = body.split('class="bg');
 			jobs.splice(0,1); // remove first element
 			var view = fetchGlobalInfos(body);
@@ -52,41 +53,51 @@ function getJobs(logindata,pageUrl,callback) {
 				});
 			});
 			callback(0,view);
+		} catch (error) {
+			callback(1,error);
+		}
 	});
 } // getJobs
 
-function displaySite(res,data) {
-	var view = {
-		jobs:[]
-	};
+function displaySite(error,res,data) {
+	if (!error) {
+		var view = {
+			jobs:[]
+		};
 
-	view.jobs = [].concat(
-		data[0].jobs,
-		data[1].jobs,
-		data[2].jobs,
-		data[3].jobs
-		);
+		view.jobs = [].concat(
+			data[0].jobs,
+			data[1].jobs,
+			data[2].jobs,
+			data[3].jobs
+			);
 
-	// remove double elements
-	var arr = {};
-	for ( var i=0; i < view.jobs.length; i++ ) {
-		arr[view.jobs[i].jobNumber] = view.jobs[i];
+		// remove double elements
+		var arr = {};
+		for ( var i=0; i < view.jobs.length; i++ ) {
+			arr[view.jobs[i].jobNumber] = view.jobs[i];
+		}
+		view.jobs = [];
+		for ( key in arr )
+			view.jobs.push(arr[key]);
+
+		// sort array
+		view.jobs.sort(function(a,b){
+			if (a.jobNumber > b.jobNumber) return -1;
+			if (a.jobNumber < b.jobNumber) return 1;
+			return 0;
+		});
+
+		view.sedcards = data[0].sedcards;
+		view.newMessage = data[0].newMessage;
+
+		res.render('jobs',view);
+	} else {
+		res.writeHead(404, {'Content-Type': 'text/plain'});
+		res.write('404 Not Found. Error in jobs.js\n');
+		res.end();
+		console.log(data);
 	}
-	view.jobs = [];
-	for ( key in arr )
-		view.jobs.push(arr[key]);
-
-	// sort array
-	view.jobs.sort(function(a,b){
-		if (a.jobNumber > b.jobNumber) return -1;
-		if (a.jobNumber < b.jobNumber) return 1;
-		return 0;
-	});
-
-	view.sedcards = data[0].sedcards;
-	view.newMessage = data[0].newMessage;
-
-	res.render('jobs',view);
 } // displaySite
 
 
@@ -111,7 +122,7 @@ module.exports = function(req, res){
 		}
 		],
 		function(error,results){
-			displaySite(res,results);
+			displaySite(error,res,results);
 		}
 	);
 };
