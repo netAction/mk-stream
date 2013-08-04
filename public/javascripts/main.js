@@ -13,7 +13,6 @@
 ;(function($) {
 
 	$.fn.unveil = function(threshold) {
-console.log("Unveil");
 		var $w = $(window),
 			th = threshold || 0,
 			retina = window.devicePixelRatio > 1,
@@ -22,9 +21,19 @@ console.log("Unveil");
 			inview,
 			source;
 
-		this.one("unveil", function() {
-			var image = this;
-			var imageNumber = this.getAttribute('imagenumber');
+
+		function likeToggle(element) {
+			var image = $(element).parent().parent().children('img');
+			var imageNumber = image.attr('imagenumber');
+			$.getJSON('/likeImage', {imageNumber:imageNumber,ds9:$(element).data('ds9')})
+				.done(function(data) {
+					processImage(image[0],false);
+				});
+		};
+
+		function processImage(element,first) {
+			var image = element;
+			var imageNumber = image.getAttribute('imagenumber');
 			if (imageNumber) {
 				$.getJSON('/fetchImageMetadata', {imageNumber:imageNumber})
 					.done(function(data) {
@@ -36,16 +45,41 @@ console.log("Unveil");
 						}
 						$(image).parent().children('p.likeInfo')
 							.html(likeInfo);
-						$(image).parent().children('div.imageDescription')
-							.html('<p><a href="https://www.model-kartei.de/bilder/bild/'+imageNumber+'">Bild bei Model-Kartei.de</a></p>');
-						$(image).click(function() {
-							$(this).parent().children('div.imageDescription').slideToggle();
-							$(this).parent().children('p.userName').slideToggle();
-							$(this).parent().children('p.likeInfo').slideToggle();
+						var imageDescription = $(image).parent().children('div.imageDescription')
+						imageDescription.html('');
+
+						if (data.likeCount) {
+							var likeInfo = data.likeCount+' '+(data.iLikeThis ? '★' : '☆');
+							$('<p class="likeCount ui-link"></p>') /* ui-link for jQuery mobile */
+								.html(likeInfo)
+								.appendTo(imageDescription)
+								.data('ds9',data.ds9)
+								.click(function(){
+									likeToggle(this);
+									});
+						}
+
+						$(data.users).each(function(i,user) {
+							imageDescription.append('<p>User: <a class="ui-link" href="/sedcards/'+user.urlPart+'">'+user.name+'</a></p>');
 						});
-						$(image).css('cursor','pointer');
+
+						imageDescription.append('<p><a class="ui-link" href="https://www.model-kartei.de/bilder/bild/'+imageNumber+'">Bild bei Model-Kartei.de</a></p>');
+
+						if (first) { // only once
+							$(image).click(function() {
+								$(this).parent().children('div.imageDescription').slideToggle();
+								$(this).parent().children('p.userName').slideToggle();
+								$(this).parent().children('p.likeInfo').slideToggle();
+							});
+							$(image).css('cursor','pointer');
+						}
 					});
 			}
+		} // processImage
+
+
+		this.one("unveil", function() {
+			processImage(this,true);
 		});
 
 

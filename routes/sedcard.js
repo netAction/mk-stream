@@ -55,12 +55,31 @@ function getSedcard(logindata,urlPart,callback) {
 					view.images.push({imageNumber:imageNumber,thumbUrl:thumbUrl,userName:''});
 				});
 
+				// image horizontal above sedcard
+				var titleBanner = body.split('id="psh"');
+				if(titleBanner.length>1) {
+					titleBanner = titleBanner[1].split('background:url(');
+					titleBanner = titleBanner[1].split(');');
+					titleBanner = titleBanner[0];
+					view.titleBanner = titleBanner;
+				}
+
+				var sedcardData = body.split('<div class="txtheader">Sedcarddaten</div>');
+				if(sedcardData.length>1) {
+					sedcardData = sedcardData[1].split('<ul class="scdaten">');
+					sedcardData = sedcardData[1].split('</ul>');
+					sedcardData = sedcardData[0];
+					view.sedcardData = sedcardData;
+				}
+
 
 				var sedcardType = urlPart.split('/');
 				sedcardType = sedcardType[0];
 				switch (sedcardType) {
 					case 'fotograf': sedcardType = 'Fotograf'; break;
 					case 'model': sedcardType = 'Model'; break;
+					case 'bildbearbeiter': sedcardType = 'Bea'; break;
+					case 'malemodel': sedcardType = 'Male'; break;
 					default : sedcardType = 'Sedcard'; break;
 					// TODO: Add more types
 				}
@@ -160,7 +179,7 @@ module.exports = function(req, res){
 	if (!logindata) return;
 
 	var urlPart = url.parse(req.url,true).pathname;
-	urlPart = urlPart.substr(9);
+	urlPart = urlPart.substr(10);
 
 
 	async.series([

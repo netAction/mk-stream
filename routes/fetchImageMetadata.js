@@ -5,16 +5,9 @@ var
 
 
 module.exports = function(req, res){
-	if (req.headers['if-none-match']) { // hope they will never change
-		res.statusCode = 304;
-		res.end();
-		return;
-	}
-
 	var logindata = login(req,res);
 	if (!logindata) return;
 
-	// get big image
 	var j = request.jar();
 	j.add(request.cookie('mk4_userid='+logindata.userid));
 	j.add(request.cookie('mk4_userpw='+logindata.userpw));
@@ -40,8 +33,42 @@ module.exports = function(req, res){
 					likeCount = false;
 				}
 
+				imageMetadata.users=[];
+				var owner = body.split('<div class="ptz">Ein Bild von');
+				owner = owner[1].split('href="https://www.model-kartei.de/sedcards/');
+				owner = owner[1].split('">');
+				var ownerUrlPart = owner[0];
+				var ownerName = owner[1].split('</a>');
+				ownerName = ownerName[0];
+				imageMetadata.users.push({'urlPart':ownerUrlPart,'name':ownerName});
+
+				var imageMembers = body.split('<h1>Bildteilnehmer</h1>');
+				if (imageMembers.length>1) {
+					imageMembers = imageMembers[1].split('<h1>');
+					imageMembers = imageMembers[0].split('<li class="userlistitem">');
+					imageMembers.splice(0,1); // remove first element
+					imageMembers.forEach(function(imageMember){
+						imageMember = imageMember.split('<div class="userlistname">');
+						imageMember = imageMember[1];
+
+						var imageMemberUrlPart = imageMember.split('href="https://www.model-kartei.de/sedcards/');
+						imageMemberUrlPart = imageMemberUrlPart[1].split('"');
+						imageMemberUrlPart = imageMemberUrlPart[0];
+
+						var imageMemberName = imageMember.split('">');
+						imageMemberName = imageMemberName[1].split('</a>');
+						imageMemberName = imageMemberName[0];
+
+						imageMetadata.users.push({'urlPart':imageMemberUrlPart,'name':imageMemberName});
+					});
+				}
+
 				var iLikeThis = body.split('title="Klicke hier wenn dir das Bild nicht mehr gef&auml;llt">Doch nicht so toll</a>');
 				imageMetadata.iLikeThis = (iLikeThis.length>1);
+
+				var ds9 = body.split("ds9:'");
+				ds9 = ds9[1].split("'");
+				imageMetadata.ds9 = ds9[0];
 
 				res.writeHead(200, {'Content-Type': 'text/plain'});
 				res.write(JSON.stringify(imageMetadata));

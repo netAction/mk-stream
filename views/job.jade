@@ -11,11 +11,11 @@ div.jobCollapsible(data-role='collapsible',data-inset="false",data-jobnumber=job
 	p
 		small
 			if(jobUserName!='')
-				a(href='https://www.model-kartei.de/jobs/'+jobNumber+'-0-x.html') Diesen Job
+				a.ui-link(href='https://www.model-kartei.de/jobs/'+jobNumber+'-0-x.html') Diesen Job
 				|  von 
-				a(href='/sedcards/'+userSedcard) !{jobUserName}
+				a.ui-link(href='/sedcards/'+userSedcard) !{jobUserName}
 				|  in Zukunft 
-				a.ignore(href='/jobs',data-jobnumber=jobNumber) ignorieren
+				a.ignore.ui-link(href='/jobs',data-jobnumber=jobNumber) ignorieren
 			else
-				a(href='https://www.model-kartei.de/jobs/'+jobNumber+'-0-x.html') Dieser Job auf Model-Kartei.de
+				a.ui-link(href='https://www.model-kartei.de/jobs/'+jobNumber+'-0-x.html') Dieser Job auf Model-Kartei.de
 

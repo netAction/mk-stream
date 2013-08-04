@@ -6,6 +6,8 @@ block vars
 block content
 	script(src='/javascripts/sedcard.js')
 	.sedcard
+		if titleBanner
+			img.titleBanner(src='http://mk-stream.netaction.de/image?url='+titleBanner)
 		h2 !{userName}
 		a(href="https://www.model-kartei.de/sedcards/"+sedcardUrl) Sedcard auf Model-Kartei.de
 		div.descriptionText !{descriptionText}

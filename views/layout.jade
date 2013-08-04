@@ -31,7 +31,7 @@ html(lang="en")
 								li
 									a(href=menuitem.url) #{menuitem.title}
 						each menuitem in sedcards
-							if (menuitem.title == title)
+							if (menuitem.url == sedcardUrl)
 								li
 									a(class='ui-btn-active ui-state-persist',href='/sedcards/'+menuitem.url) #{menuitem.title}
 							else
