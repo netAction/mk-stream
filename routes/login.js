@@ -1,4 +1,7 @@
-var Cookies = require('cookies');
+var
+	Cookies = require('cookies'),
+	request = require('request'),
+	async = require('async');
 
 // Send name/password to MK server, get cookies back and forward them to browser
 function getCookies(username, password, cookies, callback) {

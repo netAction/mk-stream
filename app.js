@@ -4,6 +4,7 @@
 // Sources: https://github.com/netAction/mk-stream
 
 var express = require('express')
+	, mkUrlRedirect = require('./routes/mkUrlRedirect')
 	, index = require('./routes')
 	, image = require('./routes/image')
 	, jobs = require('./routes/jobs')
@@ -32,6 +33,7 @@ if ('development' == app.get('env')) {
 	app.locals.pretty = true;
 }
 
+app.get(/(http|https):\/\/www\.model-kartei\.de\//,mkUrlRedirect);
 app.get('/', index);
 app.get('/image', image);
 app.get('/jobs', jobs);

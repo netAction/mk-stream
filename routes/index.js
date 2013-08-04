@@ -58,12 +58,29 @@ function displaySite(error,res,data) {
 		};
 
 		var images = [];
-		view.favouriteImages = images.concat(data[0].favouriteImages,data[1].favouriteImages);
+		view.favouriteImages = images.concat(
+			data[0].favouriteImages,
+			data[1].favouriteImages,
+			data[2].favouriteImages,
+			data[3].favouriteImages
+		);
+
+		// remove double elements
+		var arr = {};
+		for ( var i=0; i < view.favouriteImages.length; i++ ) {
+			arr[view.favouriteImages[i].imageNumber] = view.favouriteImages[i];
+		}
+		view.favouriteImages = [];
+		for ( key in arr )
+			view.favouriteImages.push(arr[key]);
+
+		// sort images
 		view.favouriteImages.sort(function(a,b){
 			if (a.imageNumber > b.imageNumber) return -1;
 			if (a.imageNumber < b.imageNumber) return 1;
 			return 0;
 		});
+
 		view.sedcards = data[0].sedcards;
 		view.newMessage = data[0].newMessage;
 
@@ -88,6 +105,12 @@ module.exports = function(req, res){
 		},
 		function(callback){
 			getFavourites(logindata,'https://www.model-kartei.de/bilder/favoriten/1/',callback);
+		},
+		function(callback){
+			getFavourites(logindata,'https://www.model-kartei.de/bilder/favoriten/2/',callback);
+		},
+		function(callback){
+			getFavourites(logindata,'https://www.model-kartei.de/bilder/favoriten/3/',callback);
 		}
 		],
 		function(error,results){
