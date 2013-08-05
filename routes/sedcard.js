@@ -27,12 +27,14 @@ function getSedcard(logindata,urlPart,callback) {
 				view.images = [];
 
 				var userName = body.split('<h1>');
+				if (userName.length==1) throw 'userName fucked';
 				userName = userName[1].split('</h1>');
 				view.userName = userName[0];
 
 				var descriptionText = body.split('<div class="maintextcell"');
 				if (descriptionText.length>1) {
 					descriptionText = descriptionText[1].split('px;">');
+					if (descriptionText.length==1) throw 'descriptionText fucked';
 					descriptionText = descriptionText[1].split('</div>');
 					descriptionText = descriptionText[0].split('<div');
 					view.descriptionText = descriptionText[0];
@@ -45,10 +47,12 @@ function getSedcard(logindata,urlPart,callback) {
 				images.forEach(function(image){
 // <a id="p12592261" name="p12592261" href="https://www.model-kartei.de/bilder/bild/12592261/"><img alt="" border="0" height="180" src="https://img9.model-kartei.de/f/z/7825/12592261.jpg" title="" width="127" /></a></div><div class="nfo"><span title="48 Kommentare, vor 3 Stunden"><b>48</b><code></code></span></div></div><div class="pic superpic">
 					var imageNumber = image.split('https://www.model-kartei.de/bilder/bild/');
+					if (imageNumber.length==1) return; // Polaroid
 					imageNumber = imageNumber[1].split('/"');
 					imageNumber = imageNumber[0];
 
 					var thumbUrl = image.split('src="');
+					if (thumbUrl.length==1) throw 'thumbUrl fucked';
 					thumbUrl = thumbUrl[1].split('"');
 					thumbUrl = thumbUrl[0];
 
@@ -59,17 +63,19 @@ function getSedcard(logindata,urlPart,callback) {
 				var titleBanner = body.split('id="psh"');
 				if(titleBanner.length>1) {
 					titleBanner = titleBanner[1].split('background:url(');
+					if (titleBanner.length==1) throw 'titleBanner fucked';
 					titleBanner = titleBanner[1].split(');');
 					titleBanner = titleBanner[0];
 					view.titleBanner = titleBanner;
 				}
 
-				var sedcardData = body.split('<div class="txtheader">Sedcarddaten</div>');
-				if(sedcardData.length>1) {
-					sedcardData = sedcardData[1].split('<ul class="scdaten">');
-					sedcardData = sedcardData[1].split('</ul>');
-					sedcardData = sedcardData[0];
-					view.sedcardData = sedcardData;
+				var modelData = body.split('<div class="txtheader">Sedcarddaten</div>');
+				if(modelData.length>1) {
+					modelData = modelData[1].split('<ul class="scdaten">');
+					if (modelData.length==1) throw 'modelData fucked';
+					modelData = modelData[1].split('</ul>');
+					modelData = modelData[0];
+					view.modelData = modelData;
 				}
 
 
@@ -80,6 +86,7 @@ function getSedcard(logindata,urlPart,callback) {
 					case 'model': sedcardType = 'Model'; break;
 					case 'bildbearbeiter': sedcardType = 'Bea'; break;
 					case 'malemodel': sedcardType = 'Male'; break;
+					case 'designer': sedcardType = 'Design'; break;
 					default : sedcardType = 'Sedcard'; break;
 					// TODO: Add more types
 				}

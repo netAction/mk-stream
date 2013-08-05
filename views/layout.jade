@@ -18,25 +18,25 @@ html(lang="en")
 		div(data-role='page',data-theme='c',data-content-theme='c')
 			div(data-role='header',data-theme='c')
 				block vars
-				h1 MK-Stream
+				h1 MK-Stream – !{title}
 				if newMessage
 					a.ui-btn-right(href='https://www.model-kartei.de/pn.html') Nachricht ✉ !{newMessage}
-				div(data-role='navbar')
-					ul
-						each menuitem in [{title:'Favoritenbilder',url:'/'},{title:'Jobs',url:'/jobs'}]
-							if (menuitem.title == title)
-								li
-									a(class='ui-btn-active ui-state-persist',href=menuitem.url) #{menuitem.title}
-							else
-								li
-									a(href=menuitem.url) #{menuitem.title}
-						each menuitem in sedcards
-							if (menuitem.url == sedcardUrl)
-								li
-									a(class='ui-btn-active ui-state-persist',href='/sedcards/'+menuitem.url) #{menuitem.title}
-							else
-								li
-									a(href='/sedcards/'+menuitem.url) #{menuitem.title}
+			div(data-role='navbar',data-position='fixed',data-disable-page-zoom='false')
+				ul
+					each menuitem in [{title:'Favoriten',url:'/'},{title:'Jobs',url:'/jobs'},{title:'Diskussion',url:'/discussion'}]
+						if (menuitem.title == title)
+							li
+								a(class='ui-btn-active ui-state-persist',href=menuitem.url) #{menuitem.title}
+						else
+							li
+								a(href=menuitem.url) #{menuitem.title}
+					each menuitem in sedcards
+						if (menuitem.url == sedcardUrl)
+							li
+								a(class='ui-btn-active ui-state-persist',href='/sedcards/'+menuitem.url) #{menuitem.title}
+						else
+							li
+								a(href='/sedcards/'+menuitem.url) #{menuitem.title}
 
 			div(data-role='content')
 				block content

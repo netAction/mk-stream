@@ -1,7 +1,7 @@
 extends layout
 
 block vars
-	- var title = sedcardType
+	- var title = userName
 
 block content
 	script(src='/javascripts/sedcard.js')
@@ -9,9 +9,16 @@ block content
 		if titleBanner
 			img.titleBanner(src='http://mk-stream.netaction.de/image?url='+titleBanner)
 		h2 !{userName}
-		a(href="https://www.model-kartei.de/sedcards/"+sedcardUrl) Sedcard auf Model-Kartei.de
-		div.descriptionText !{descriptionText}
+		p
+			a(href="https://www.model-kartei.de/sedcards/"+sedcardUrl) Sedcard auf Model-Kartei.de
+		div.modelData(data-role='collapsible',data-inset="false",data-collapsed="false")
+			h3 Sedcardtext
+			div.descriptionText !{descriptionText}
 
+		if modelData
+			div.modelData(data-role='collapsible',data-inset="false")
+				h3 Daten
+				ul !{modelData}
 		each job in jobs
 			- var jobNumber = job.jobNumber
 			- var payUser = job.payUser

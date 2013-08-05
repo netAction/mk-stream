@@ -12,6 +12,7 @@ var express = require('express')
 	, sedcard = require('./routes/sedcard')
 	, fetchImageMetadata = require('./routes/fetchImageMetadata')
 	, likeImage = require('./routes/likeImage')
+	, discussion = require('./routes/discussion')
 	, http = require('http')
 	, path = require('path');
 
@@ -41,6 +42,7 @@ app.get('/jobs', jobs);
 app.get('/fetchImageMetadata', fetchImageMetadata);
 app.get('/likeImage', likeImage);
 app.get('/jobData', jobData);
+app.get('/discussion', discussion);
 app.get(/^\/sedcards.*/, sedcard);
 
 

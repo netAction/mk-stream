@@ -58,3 +58,14 @@ span.thin {
 .sedcard .titleBanner {
 	width:100%;
 }
+
+.sedcard .modelData li {
+	font-weight:bold;
+}
+
+.sedcard .modelData li div {
+	font-weight:normal;
+	display:inline;
+	margin-left:0.5em;
+}
+
