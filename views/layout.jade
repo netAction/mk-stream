@@ -8,16 +8,30 @@ html(lang="en")
 		meta(charset='UTF-8')
 		meta(name='viewport',content='width=device-width,initial-scale=1')
 		title MK-Stream
-		link(rel='stylesheet',href='http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css')
+		link(rel='stylesheet',href='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css')
 		link(rel='stylesheet',href='/stylesheets/style.css')
 		link(href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300',rel='stylesheet',type='text/css')
 		script(src='http://code.jquery.com/jquery-1.9.1.min.js')
-		script(src='http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js')
+		script(src='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js')
 		script(src='/javascripts/main.js')
 	body
-		div(data-role='page',data-theme='c',data-content-theme='c')
+		div.ui-responsive-panel(data-role='page',data-theme='c',data-content-theme='c')
+			div#sidepanel(data-role='panel',data-theme='c')
+				ul(data-role='listview')
+					li(data-role='list-divider') Direkte Links
+					li
+						a(href='https://www.model-kartei.de/pn.html') Konversationen
+					li
+						a(href='https://www.model-kartei.de/index.php?p=jobs') Meine Jobs
+					li
+						a(href='https://www.model-kartei.de/index.php?p=foruminterest') Forum Infoliste
+					li
+						a(href='https://www.model-kartei.de/forum/threads/') Forum Neue Themen
+					li
+						a(href='/logout') Logout
 			div(data-role='header',data-theme='c')
 				block vars
+				a.ui-btn-left(href='#sidepanel',data-icon='bars',data-iconpos='notext')
 				h1 MK-Stream – !{title}
 				if newMessage
 					a.ui-btn-right(href='https://www.model-kartei.de/pn.html') Nachricht ✉ !{newMessage}
