@@ -60,7 +60,7 @@
 						}
 
 						$(data.users).each(function(i,user) {
-							imageDescription.append('<p>User: <a class="ui-link" href="/sedcards/'+user.urlPart+'">'+user.name+'</a></p>');
+							imageDescription.append('<p>'+user.type+': <a class="ui-link" href="/sedcards/'+user.urlPart+'">'+user.name+'</a></p>');
 						});
 
 						imageDescription.append('<p><a class="ui-link" href="https://www.model-kartei.de/bilder/bild/'+imageNumber+'">Bild bei Model-Kartei.de</a></p>');

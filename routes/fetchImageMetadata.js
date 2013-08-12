@@ -19,7 +19,9 @@ module.exports = function(req, res){
 			try {
 				imageMetadata = {};
 				var imageUrl = body.split('id="bild"');
+				if (imageUrl.length==1) throw 'imageUrl a fucked!';
 				imageUrl = imageUrl[1].split('src="');
+				if (imageUrl.length==1) throw 'imageUrl b fucked!';
 				imageUrl = imageUrl[1].split('"');
 				imageUrl = imageUrl[0];
 				imageMetadata.url = imageUrl;
@@ -35,12 +37,33 @@ module.exports = function(req, res){
 
 				imageMetadata.users=[];
 				var owner = body.split('<div class="ptz">Ein Bild von');
+				if (owner.length==1) throw 'owner a fucked!';
 				owner = owner[1].split('href="https://www.model-kartei.de/sedcards/');
+				if (owner.length==1) throw 'owner b fucked!';
 				owner = owner[1].split('">');
 				var ownerUrlPart = owner[0];
 				var ownerName = owner[1].split('</a>');
 				ownerName = ownerName[0];
-				imageMetadata.users.push({'urlPart':ownerUrlPart,'name':ownerName});
+				var ownerType = body.split('<div class="ptz">Ein Bild von');
+				if (ownerType.length==1) throw 'ownerType a fucked!';
+				ownerType = ownerType[1].split('"></code>');
+				ownerType = ownerType[0].split('<code class="');
+				if (ownerType.length==1) throw 'ownerType b fucked!';
+				ownerType = ownerType[1];
+				switch (ownerType) {
+					case "scd1": ownerType = "Model"; break;
+					case "scd2": ownerType = "Fotograf"; break;
+					case "scd3": ownerType = "Visagist"; break;
+					case "scd7": ownerType = "Bildbearbeiter"; break;
+					case "scd99": ownerType = "Malemodel"; break;
+					// TODO: More sedcard types
+					default: ownerType = "User";
+				}
+				imageMetadata.users.push({
+					'urlPart':ownerUrlPart,
+					'name':ownerName,
+					'type':ownerType
+					});
 
 				var imageMembers = body.split('<h1>Bildteilnehmer</h1>');
 				if (imageMembers.length>1) {
@@ -48,18 +71,40 @@ module.exports = function(req, res){
 					imageMembers = imageMembers[0].split('<li class="userlistitem">');
 					imageMembers.splice(0,1); // remove first element
 					imageMembers.forEach(function(imageMember){
+						var imageMemberType = imageMember.split('<div class="userlistsedcardtype ');
+						if (imageMemberType.length==1) console.log(imageMember);
+						if (imageMemberType.length==1) throw 'imageMemberType fucked!';
+						imageMemberType = imageMemberType[1].split('"></div>');
+						imageMemberType = imageMemberType[0];
+						switch (imageMemberType) {
+							case "bgcolor1": imageMemberType = "Model"; break;
+							case "bgcolor2": imageMemberType = "Fotograf"; break;
+							case "bgcolor3": imageMemberType = "Visagist"; break;
+							case "bgcolor7": imageMemberType = "Bildbearbeiter"; break;
+							case "bgcolor99": imageMemberType = "Malemodel"; break;
+							// TODO: More sedcard types
+							default: imageMemberType = "User";
+						}
+
 						imageMember = imageMember.split('<div class="userlistname">');
+						if (imageMember.length==1) throw 'imageMember fucked!';
 						imageMember = imageMember[1];
 
 						var imageMemberUrlPart = imageMember.split('href="https://www.model-kartei.de/sedcards/');
+						if (imageMemberUrlPart.length==1) throw 'imageMemberUrlPart fucked!';
 						imageMemberUrlPart = imageMemberUrlPart[1].split('"');
 						imageMemberUrlPart = imageMemberUrlPart[0];
 
 						var imageMemberName = imageMember.split('">');
+						if (imageMemberName.length==1) throw 'imageMemberName fucked!';
 						imageMemberName = imageMemberName[1].split('</a>');
 						imageMemberName = imageMemberName[0];
 
-						imageMetadata.users.push({'urlPart':imageMemberUrlPart,'name':imageMemberName});
+						imageMetadata.users.push({
+							'urlPart':imageMemberUrlPart,
+							'name':imageMemberName,
+							'type':imageMemberType
+							});
 					});
 				}
 
@@ -77,6 +122,7 @@ module.exports = function(req, res){
 				res.writeHead(200, {'Content-Type': 'text/plain'});
 				res.write(JSON.stringify({error:true}));
 				res.end();
+				console.log(e);
 			} 
 	});
 }
