@@ -1,12 +1,20 @@
 MK-Stream
 =========
 
-Eine Timeline für die Model-Kartei. Momentan nur für Handys geeignet.
+Eine Timeline für die Model-Kartei auf Smartphones.
 
-http://mk-stream.netaction.de/
+*[mk-stream.netaction.de](http://mk-stream.netaction.de/)*
 
-In der Timeline sind momentan nur die [neuesten Bilder der Favoriten](https://www.model-kartei.de/bilder/favoriten/). Es lässt sich umschalten auf eine Zusammenfassung der [neuesten Jobs im Radar](https://www.model-kartei.de/index.php?p=radar&t=25) und der [neuesten Jobs der Favoriten](https://www.model-kartei.de/index.php?p=neues&show=6). Eigentlich sollten die Bilder und Jobs untereinander in einer einzigen Timeline dargestellt werden. Das geht aber nicht, weil Model-Kartei.de die benötigten Zeitangaben nicht liefert. Eigentlich sollten auch die [neuen Themen im Forum](https://www.model-kartei.de/forum/threads/), die [letzten Antworten auf abonnierte Forenthemen](https://www.model-kartei.de/index.php?p=forum&show=1) sowie die [Statusmeldungen](https://www.model-kartei.de/index.php?p=startseite&show=status) in die Timeline. Leider geht das alles mangels Zeitangaben nicht.
 
-Der MK-Stream zeigt bei Bildern die Zahl der Likes direkt an. Es gibt auch eine Darstellung für Sedcards. Die eigenen Sedcards sind direkt in der Navigation verlinkt. Damit kann man seine eigenen Fotos unterwegs herumzeigen.
+Funktionen
+----------
 
-Lizenz: Do the fuck you want!
+In der Timeline sind momentan nur die [neuesten Bilder der Favoriten](https://www.model-kartei.de/bilder/favoriten/). Es lässt sich umschalten auf eine Zusammenfassung der [neuesten Jobs im Radar](https://www.model-kartei.de/index.php?p=radar&t=25) und der [neuesten Jobs der Favoriten](https://www.model-kartei.de/index.php?p=neues&show=6). Eigentlich sollten die Bilder, Jobs, Statusmeldungen, Forenupdates und andere Benachrichtigungen untereinander in einer einzigen Timeline dargestellt werden. Das geht aber nicht, weil Model-Kartei.de die benötigten Zeitangaben nicht liefert.
+
+Bilder lassen sich im MK-Stream direkt liken. Die Sedcards der Bildteilnehmer und die Anbieter der Jobs lassen sich im MK-Stream anzeigen. Die eigenen Sedcards können in der Navigation angeklickt werden, damit man seine Fotos unterwegs direkt herumzeigen kann. Im seitlichen Menü sind Links zu wichtigen Seiten der Model-Kartei.
+
+
+Lizenz
+------
+
+Do the fuck you want!
