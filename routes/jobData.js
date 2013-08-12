@@ -25,9 +25,22 @@ function fetch(jobNumber,j,res) {
 					jobImage = false;
 				}
 
+				var town = body.split('<code class="flag');
+console.log("a");
+				if (town.length>1) {
+console.log("b", town[1]);
+					town = town[1].split('</div>');
+					town = town[0].split('</code>');
+					if (town.length>1) {
+console.log("c",town[1]);
+						town = town[1];
+					}
+				}
+
 				var jobData = {
 					jobText:jobText,
-					jobImage:jobImage
+					jobImage:jobImage,
+					jobTown:town
 				};
 
 				res.writeHead(200, {'Content-Type': 'text/plain'});

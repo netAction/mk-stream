@@ -8,15 +8,23 @@ block content
 	.sedcard
 		if titleBanner
 			img.titleBanner(src='http://mk-stream.netaction.de/image?url='+titleBanner)
-		h2 !{userName}
+		if sedcardImage
+			img.sedcardImage(src='http://mk-stream.netaction.de/image?url='+sedcardImage)
+		h2.userName !{userName}
+		if town
+			p
+				a(href="https://maps.google.com/?q="+encodeURIComponent(town)) !{town}
 		p
 			a(href="https://www.model-kartei.de/sedcards/"+sedcardUrl) Sedcard auf Model-Kartei.de
-		div.modelData(data-role='collapsible',data-inset="false",data-collapsed="false")
+		div.modelData(data-role='collapsible',data-inset='false',data-collapsed='false',style='clear:both;')
 			h3 Sedcardtext
 			div.descriptionText !{descriptionText}
-
+		if notes
+			div.sedcardnotes(data-role='collapsible',data-inset='false',data-collapsed='false')
+				h3 Notizen
+				p !{notes}
 		if modelData
-			div.modelData(data-role='collapsible',data-inset="false")
+			div.modelData(data-role='collapsible',data-inset='false')
 				h3 Daten
 				ul !{modelData}
 		each job in jobs
@@ -26,7 +34,7 @@ block content
 			- var jobUserName = ''
 			include job
 
-		div.jobCollapsible(data-role='collapsible',data-inset="false",data-collapsed="false")
+		div.jobCollapsible(data-role='collapsible',data-inset='false',data-collapsed='false')
 			h3 Bilder
 			each image in images
 				- var imageNumber = image.imageNumber

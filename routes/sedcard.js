@@ -69,6 +69,16 @@ function getSedcard(logindata,urlPart,callback) {
 					view.titleBanner = titleBanner;
 				}
 
+				var sedcardImage = body.split('rdscmpr');
+				if(sedcardImage.length>1) {
+					sedcardImage = sedcardImage[1].split('style="background:url(');
+					if (sedcardImage.length>1) {
+						sedcardImage = sedcardImage[1].split(');');
+						sedcardImage = sedcardImage[0];
+						view.sedcardImage = sedcardImage;
+					}
+				}
+
 				var modelData = body.split('<div class="txtheader">Sedcarddaten</div>');
 				if(modelData.length>1) {
 					modelData = modelData[1].split('<ul class="scdaten">');
@@ -78,6 +88,20 @@ function getSedcard(logindata,urlPart,callback) {
 					view.modelData = modelData;
 				}
 
+				var ds9 = body.split('<input id="ds9x" type="hidden" value="');
+				if (ds9.length==1) throw 'ds9 fucked';
+				ds9 = ds9[1].split('"');
+				view.ds9 = ds9[0];
+
+				var town = body.split('<code class="flag');
+				if (town.length>1) {
+					town = town[1].split('</a>');
+					town = town[0].split('</code>');
+					if (town.length>1) {
+						town = town[1];
+						view.town = town;
+					}
+				}
 
 				var sedcardType = urlPart.split('/');
 				sedcardType = sedcardType[0];
@@ -102,7 +126,7 @@ function getSedcard(logindata,urlPart,callback) {
 } // getSedcard
 
 
-function getJobs(logindata,urlPart,callback) {
+function getJobs(sedcard,logindata,urlPart,callback) {
 	var j = request.jar();
 	j.add(request.cookie('mk4_userid='+logindata.userid));
 	j.add(request.cookie('mk4_userpw='+logindata.userpw));
@@ -132,19 +156,24 @@ function getJobs(logindata,urlPart,callback) {
 				view.jobs = [];
 				jobs.forEach(function(job){
 					var jobNumber = job.split('href="https://www.model-kartei.de/jobs/');
+					if (jobNumber.length==1) throw 'jobNumber fucked';
 					jobNumber = jobNumber[1].split('-0-');
 					jobNumber = jobNumber[0];
 
 					var jobTitle = job.split('title="');
+					if (jobTitle.length==1) throw 'jobTitle fucked';
 					jobTitle = jobTitle[1].split('">');
 					jobTitle = jobTitle[0];
 
 					var userSedcard = job.split('https://www.model-kartei.de/sedcards/');
+					if (userSedcard.length==1) throw 'userSedcard fucked';
 					userSedcard = userSedcard[1].split('/" ');
 					userSedcard = userSedcard[0];
 
 					var userName = job.split('https://www.model-kartei.de/sedcards');
+					if (userName.length==1) throw 'userName a fucked';
 					userName = userName[1].split('title="');
+					if (userName.length==1) throw 'userName b fucked';
 					userName = userName[1].split('">');
 					userName = userName[0];
 
@@ -159,7 +188,8 @@ function getJobs(logindata,urlPart,callback) {
 						payUser: payUser
 					});
 				});
-				callback(0,view);
+				sedcard.jobs = view.jobs; // add jobs to other sedcard data
+				callback(0,sedcard);
 
 			} catch (error) {
 				callback(1,error);
@@ -167,11 +197,47 @@ function getJobs(logindata,urlPart,callback) {
 	});
 } // getJobs
 
+
+function getNotes(sedcard,logindata,urlPart,callback) {
+	var j = request.jar();
+	j.add(request.cookie('mk4_userid='+logindata.userid));
+	j.add(request.cookie('mk4_userpw='+logindata.userpw));
+
+	urlPart = urlPart.split('/');
+	userId = 0;
+	for(var i=0;i<urlPart.length;i++) {
+		if (parseInt(urlPart[i],10)>userId) {
+			userId = parseInt(urlPart[i],10);
+		}
+	}
+
+	request(
+		{
+			method:'POST',
+			url:'https://www.model-kartei.de/js/p/no.php',
+			form:{fuid:userId,ds9:sedcard.ds9},
+			jar: j
+		},
+		function (error, response, body) {
+			try {
+				var notes = body.split('<textarea class="tarea" cols="10" id="noinhalt" name="inhalt" rows="10">');
+				if (notes.length>1) {
+					notes = notes[1].split('</textarea>');
+					notes = notes[0];
+					if (notes != '') sedcard.notes = notes; // add notes to other sedcard data
+				}
+				callback(0,sedcard);
+			} catch (error) {
+				callback(1,error);
+			}
+		}
+	);
+} // getNotes
+
+
 function displaySite(error,res,data) {
 	if (!error) {
-		view=data[0];
-		view.jobs=data[1].jobs;
-		res.render('sedcard',view);
+		res.render('sedcard',data);
 	} else {
 		res.writeHead(404, {'Content-Type': 'text/plain'});
 		res.write('404 Not Found.  Error in sedcard.js\n');
@@ -189,23 +255,19 @@ module.exports = function(req, res){
 	urlPart = urlPart.substr(10);
 
 
-	async.series([
+	async.waterfall([
 		function(callback){ // Sedcard
 			getSedcard(logindata,urlPart,callback);
 		},
-		function(callback){ // Jobs
-			getJobs(logindata,urlPart,callback);
+		function(arg,callback){ // Jobs
+			getJobs(arg,logindata,urlPart,callback);
 		},
-
+		function(arg,callback){ // Notes
+			getNotes(arg,logindata,urlPart,callback);
+		}
 		],
 		function(error,results){
 			displaySite(error,res,results);
 		}
 	);
-
-
-
-
-
-
 };

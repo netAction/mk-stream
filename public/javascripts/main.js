@@ -139,6 +139,12 @@ function job() {
 				if (data.jobImage) {
 					$('.jobDescription',job).append('<img src="/image?url='+data.jobImage+'" />');
 				}
+				if(data.jobTown) {
+					$('.jobDescription',job)
+						.append('<p>Ort: '+
+							'<a href="https://maps.google.com/?q='+encodeURIComponent(data.jobTown)+'">'+data.jobTown+'</a>'+
+							'</p>');
+				}
 				$('a.ignore',job).click(function(event) {
 					$(job).slideUp('slow');
 					event.preventDefault();
