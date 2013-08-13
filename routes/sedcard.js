@@ -7,9 +7,6 @@ var
 	fetchGlobalInfos = require('./fetchGlobalInfos');
 
 
-
-
-
 function getSedcard(logindata,urlPart,callback) {
 	var j = request.jar();
 	j.add(request.cookie('mk4_userid='+logindata.userid));
@@ -24,6 +21,7 @@ function getSedcard(logindata,urlPart,callback) {
 		function (error, response, body) {
 			try {
 				var view = fetchGlobalInfos(body);
+				if (view.loggedOut) throw 'loggedOut';
 				view.images = [];
 
 				var userName = body.split('<h1>');
@@ -235,9 +233,11 @@ function getNotes(sedcard,logindata,urlPart,callback) {
 } // getNotes
 
 
-function displaySite(error,res,data) {
+function displaySite(error,req,res,data) {
 	if (!error) {
 		res.render('sedcard',data);
+	} else if (data=='loggedOut') {
+		login.logout(req,res);
 	} else {
 		res.writeHead(404, {'Content-Type': 'text/plain'});
 		res.write('404 Not Found.  Error in sedcard.js\n');
@@ -248,7 +248,7 @@ function displaySite(error,res,data) {
 
 
 module.exports = function(req, res){
-	var logindata = login(req,res);
+	var logindata = login.login(req,res);
 	if (!logindata) return;
 
 	var urlPart = url.parse(req.url,true).pathname;
@@ -267,7 +267,7 @@ module.exports = function(req, res){
 		}
 		],
 		function(error,results){
-			displaySite(error,res,results);
+			displaySite(error,req,res,results);
 		}
 	);
 };

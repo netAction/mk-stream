@@ -1,3 +1,4 @@
+// simply forward image to browser
 var
 	request = require('request'),
 	url = require('url');
@@ -8,7 +9,7 @@ module.exports = function(req, res){
 		res.statusCode = 304;
 		res.end();
 	} else {
-		// proxy image (because of stupid referrer-check
+		// proxy image (because of stupid referrer-check)
 		try {
 			request.get(queryData.url).pipe(res);
 		} catch (e) {

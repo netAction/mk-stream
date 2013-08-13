@@ -5,7 +5,7 @@ var
 
 
 module.exports = function(req, res){
-	var logindata = login(req,res);
+	var logindata = login.login(req,res);
 	if (!logindata) return;
 
 	var j = request.jar();

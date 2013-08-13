@@ -13,6 +13,7 @@ var express = require('express')
 	, fetchImageMetadata = require('./routes/fetchImageMetadata')
 	, likeImage = require('./routes/likeImage')
 	, discussion = require('./routes/discussion')
+	, login = require('./routes/login')
 	, http = require('http')
 	, path = require('path');
 
@@ -24,6 +25,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.favicon(__dirname + '/public/images/favicon.ico'));
 app.use(express.logger('dev'));
+app.use(express.cookieParser());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
@@ -35,7 +37,9 @@ if ('development' == app.get('env')) {
 	app.locals.pretty = true;
 }
 
+
 app.get(/(http|https):\/\/www\.model-kartei\.de\//,mkUrlRedirect);
+app.post('/', index);
 app.get('/', index);
 app.get('/image', image);
 app.get('/jobs', jobs);
@@ -44,6 +48,7 @@ app.get('/likeImage', likeImage);
 app.get('/jobData', jobData);
 app.get('/discussion', discussion);
 app.get(/^\/sedcards.*/, sedcard);
+app.get('/logout', login.logout);
 
 
 http.createServer(app).listen(app.get('port'), function(){

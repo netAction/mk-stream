@@ -1,8 +1,8 @@
 var
 	request = require('request'),
 	url = require('url'),
-	login = require('./login');
-
+	login = require('./login'),
+	fetchGlobalInfos = require('./fetchGlobalInfos');
 
 function fetch(jobNumber,j,res) {
 	request(
@@ -13,6 +13,9 @@ function fetch(jobNumber,j,res) {
 		},
 		function (error, response, body) {
 			try {
+				var loggedOut = fetchGlobalInfos(body);
+				if (loggedOut.loggedOut) throw 'loggedOut';
+
 				var jobText = body.split('</div><div class="tfield">');
 				jobText = jobText[1].split('</div>');
 				jobText = jobText[0];
@@ -26,13 +29,10 @@ function fetch(jobNumber,j,res) {
 				}
 
 				var town = body.split('<code class="flag');
-console.log("a");
 				if (town.length>1) {
-console.log("b", town[1]);
 					town = town[1].split('</div>');
 					town = town[0].split('</code>');
 					if (town.length>1) {
-console.log("c",town[1]);
 						town = town[1];
 					}
 				}
@@ -73,7 +73,7 @@ function ignore(jobNumber,j,res) {
 
 
 module.exports = function(req, res){
-	var logindata = login(req,res);
+	var logindata = login.login(req,res);
 	if (!logindata) return;
 
 	var j = request.jar();

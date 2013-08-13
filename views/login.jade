@@ -1,0 +1,45 @@
+doctype 5
+html(lang="en")
+	// MK-Wall 2013 by Thomas netAction Schmidt
+	// License: Do the fuck you want!
+	// Page: http://mk-stream.netaction.de/
+	// Sources: https://github.com/netAction/mk-stream
+	head
+		meta(charset='UTF-8')
+		meta(name='viewport',content='width=device-width,initial-scale=1')
+		title MK-Stream
+		link(rel='stylesheet',href='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css')
+		link(rel='stylesheet',href='/stylesheets/style.css')
+		link(href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300',rel='stylesheet',type='text/css')
+		script(src='http://code.jquery.com/jquery-1.9.1.min.js')
+		script(src='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js')
+		script(src='/javascripts/main.js')
+	body
+		div.ui-responsive-panel(data-role='page',data-theme='c',data-content-theme='c')
+			div(data-role='header',data-theme='c')
+				block vars
+				h1 MK-Stream – Login
+			div(data-role='content')
+				if(logout)
+					p Du wurdest abgemeldet.
+				if(wrongPassword)
+					p Name/Passwort sind falsch.
+				p Melde dich mit dem Namen und Passwort aus der Model-Kartei an. Die Daten werden nicht gespeichert, sondern nur an model-kartei.de weitergegeben.
+				form(action='/',method='post')
+					div(data-role='fieldcontain')
+						label(for='userid') User-ID oder E-Mail Adresse
+						if(userid)
+							input#userid(type='text',name='userid',value=userid)
+						else
+							input#userid(type='text',name='userid')
+					div(data-role='fieldcontain')
+						label(for='userpw') Passwort
+						input#userpw(type='password',name='userpw')
+					input(type='submit',value='Login')
+				p Der Quellcode befindet sich 
+					a(href='https://github.com/netAction/mk-stream') auf Github
+					| . Bei Fragen schreibe bitte 
+					a(href='http://etherpad.netaction.de/p/mks') ins Etherpad
+					| .
+			div(data-role='footer',data-theme='c')
+				h1 Powered by netAction

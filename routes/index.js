@@ -22,6 +22,7 @@ function getFavourites(logindata,pageUrl,callback) {
 				if (error || response.statusCode != 200) throw 'fuck';
 
 				var view = fetchGlobalInfos(body);
+				if (view.loggedOut) throw 'loggedOut';
 				view.favouriteImages = [];
 
 				var images = body.split('href="https://www.model-kartei.de/bilder/bild/');
@@ -51,7 +52,7 @@ function getFavourites(logindata,pageUrl,callback) {
 } // getFavourites
 
 
-function displaySite(error,res,data) {
+function displaySite(error,req,res,data) {
 	if(!error) {
 		var view = {
 			favouriteImages:[]
@@ -85,6 +86,8 @@ function displaySite(error,res,data) {
 		view.newMessage = data[0].newMessage;
 
 		res.render('index',view);
+	} else if (data=='loggedOut') {
+		login.logout(req,res);
 	} else {
 		res.writeHead(404, {'Content-Type': 'text/plain'});
 		res.write('404 Not Found. Error in index.js\n');
@@ -96,7 +99,7 @@ function displaySite(error,res,data) {
 
 
 module.exports = function(req, res){
-	var logindata = login(req,res);
+	var logindata = login.login(req,res);
 	if (!logindata) return;
 
 	async.series([
@@ -114,7 +117,7 @@ module.exports = function(req, res){
 		}
 		],
 		function(error,results){
-			displaySite(error,res,results);
+			displaySite(error,req,res,results);
 		}
 	);
 };

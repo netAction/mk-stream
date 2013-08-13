@@ -29,7 +29,9 @@ function getJobs(logindata,pageUrl,callback) {
 <li class=" */
 			jobs.splice(0,1); // remove first element
 			var view = fetchGlobalInfos(body);
+			if (view.loggedOut) throw 'loggedOut';
 			view.jobs = [];
+
 			jobs.forEach(function(job){
 				var jobNumber = job.split('href="https://www.model-kartei.de/jobs/');
 				if (jobNumber.length==1) throw 'jobNumber fucked';
@@ -73,7 +75,7 @@ function getJobs(logindata,pageUrl,callback) {
 	});
 } // getJobs
 
-function displaySite(error,res,data) {
+function displaySite(error,req,res,data) {
 	if (!error) {
 		var view = {
 			jobs:[]
@@ -106,6 +108,8 @@ function displaySite(error,res,data) {
 		view.newMessage = data[0].newMessage;
 
 		res.render('jobs',view);
+	} else if (data=='loggedOut') {
+		login.logout(req,res);
 	} else {
 		res.writeHead(404, {'Content-Type': 'text/plain'});
 		res.write('404 Not Found. Error in jobs.js\n');
@@ -116,7 +120,7 @@ function displaySite(error,res,data) {
 
 
 module.exports = function(req, res){
-	var logindata = login(req,res);
+	var logindata = login.login(req,res);
 	if (!logindata) return;
 
 	async.series([
@@ -135,7 +139,7 @@ module.exports = function(req, res){
 		}
 		],
 		function(error,results){
-			displaySite(error,res,results);
+			displaySite(error,req,res,results);
 		}
 	);
 };

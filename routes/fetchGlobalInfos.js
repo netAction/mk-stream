@@ -1,9 +1,16 @@
 var
 	request = require('request'),
-	url = require('url'),
-	login = require('./login');
+	url = require('url');
 
 module.exports = function(body){
+	var loginStatus = body.split('<a href="http://www.model-kartei.de/login.html">Login</a>');
+	if (loginStatus.length>1) { // logged out
+		var view = {
+			loggedOut:true
+		};
+		return view;
+	}
+
 	var view = {
 		sedcards:[]
 	};

@@ -1,11 +1,12 @@
 var
 	request = require('request'),
 	url = require('url'),
-	login = require('./login');
+	login = require('./login'),
+	fetchGlobalInfos = require('./fetchGlobalInfos');
 
 
 module.exports = function(req, res){
-	var logindata = login(req,res);
+	var logindata = login.login(req,res);
 	if (!logindata) return;
 
 	var j = request.jar();
@@ -17,6 +18,9 @@ module.exports = function(req, res){
 		url:'https://www.model-kartei.de/bilder/bild/'+queryData.imageNumber+'/'},
 		function(error, response, body) {
 			try {
+				var loggedOut = fetchGlobalInfos(body);
+				if (loggedOut.loggedOut) throw 'loggedOut';
+
 				imageMetadata = {};
 				var imageUrl = body.split('id="bild"');
 				if (imageUrl.length==1) throw 'imageUrl a fucked!';
@@ -72,7 +76,6 @@ module.exports = function(req, res){
 					imageMembers.splice(0,1); // remove first element
 					imageMembers.forEach(function(imageMember){
 						var imageMemberType = imageMember.split('<div class="userlistsedcardtype ');
-						if (imageMemberType.length==1) console.log(imageMember);
 						if (imageMemberType.length==1) throw 'imageMemberType fucked!';
 						imageMemberType = imageMemberType[1].split('"></div>');
 						imageMemberType = imageMemberType[0];
@@ -122,7 +125,7 @@ module.exports = function(req, res){
 				res.writeHead(200, {'Content-Type': 'text/plain'});
 				res.write(JSON.stringify({error:true}));
 				res.end();
-				console.log(e);
+				console.log('fetchImageMetadata error: '+e);
 			} 
 	});
 }
